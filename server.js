@@ -2,6 +2,7 @@
 
 const http = require("http");
 const express = require("express");
+const debug = require("debug")("nodestore:server");
 
 const app = express();
 const port = normalizePort(process.env.PORT || 3000);
@@ -21,6 +22,7 @@ app.use("/", route);
 
 server.listen(port);
 server.on("error", onError);
+server.on("listening", onListening);
 
 console.log(`API is listening on port: ${port}`);
 
@@ -57,4 +59,10 @@ function onError(error) {
     default:
       throw error;
   }
+}
+
+function onListening() {
+  const addr = server.address();
+  const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+  debug("Listening on " + bind);
 }
