@@ -1,22 +1,12 @@
 "use strict";
 
 const express = require("express");
+const controller = require("../controllers/products-controller");
+
 const router = express.Router();
 
-router.post("/", (req, res, next) => {
-  res.status(201).send(req.body);
-});
-
-router.put("/:id", (req, res, next) => {
-  const id = req.params.id;
-  res.status(200).send({
-    id: id,
-    item: req.body,
-  });
-});
-
-router.delete("/:id", (req, res, next) => {
-  res.status(200).send(req.body);
-});
+router.post("/", controller.post);
+router.put("/:id", controller.put);
+router.delete("/:id", controller.del);
 
 module.exports = router;
