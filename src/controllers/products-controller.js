@@ -104,5 +104,16 @@ exports.put = (req, res, next) => {
 };
 
 exports.del = (req, res, next) => {
-  res.status(200).send(req.body);
+  Product.findByIdAndDelete(req.body.id)
+    .then(() => {
+      res.status(200).send({
+        message: "Product was successfully deleted!",
+      });
+    })
+    .catch(() => {
+      res.status(400).send({
+        message: "Failed to delte the product",
+        data: e,
+      });
+    });
 };
