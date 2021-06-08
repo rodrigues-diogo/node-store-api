@@ -1,6 +1,7 @@
 "use strict";
 
 const Product = require("../models/products");
+const ValidationContract = require("../validators/validator");
 
 exports.get = (req, res, next) => {
   Product.find(
@@ -68,6 +69,27 @@ exports.getByTag = (req, res, next) => {
 };
 
 exports.post = (req, res, next) => {
+  let contract = new ValidationContract();
+  contract.hasMinLen(
+    req.body.title,
+    3,
+    "The title field should has at least 3 characters"
+  );
+  contract.hasMinLen(
+    req.body.slug,
+    3,
+    "The slug field should has at least 3 characters"
+  );
+  contract.hasMinLen(
+    req.body.description,
+    3,
+    "The description field should has at least 3 characters"
+  );
+
+  if (!contract.isValid()) {
+    res.status(400).send(contract.getErrors()).end();
+  }
+
   const product = new Product(req.body);
   product
     .save()
