@@ -85,11 +85,22 @@ exports.post = (req, res, next) => {
 };
 
 exports.put = (req, res, next) => {
-  const id = req.params.id;
-  res.status(200).send({
-    id: id,
-    item: req.body,
-  });
+  Product.findByIdAndUpdate(req.params.id, {
+    title: req.body.title,
+    description: req.body.description,
+    price: req.body.price,
+  })
+    .then(() => {
+      res.status(200).send({
+        message: "Product was successfully updated!",
+      });
+    })
+    .catch(() => {
+      res.status(400).send({
+        message: "Failed to update the product",
+        data: e,
+      });
+    });
 };
 
 exports.del = (req, res, next) => {
