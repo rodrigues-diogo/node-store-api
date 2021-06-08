@@ -1,7 +1,20 @@
 "use strict";
 
+const mongoose = require("mongoose");
+const Product = require("../models/products");
+
 exports.post = (req, res, next) => {
-  res.status(201).send(req.body);
+  const product = new Product(req.body);
+  product
+    .save()
+    .then((x) => {
+      res.status(201).send({ message: "Product was successfully registered!" });
+    })
+    .catch((e) => {
+      res
+        .status(400)
+        .send({ message: "Failed to register the product", data: e });
+    });
 };
 
 exports.put = (req, res, next) => {
