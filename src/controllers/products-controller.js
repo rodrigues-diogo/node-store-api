@@ -1,19 +1,38 @@
 "use strict";
 
-const mongoose = require("mongoose");
 const Product = require("../models/products");
+
+exports.get = (req, res, next) => {
+  Product.find(
+    {
+      active: true,
+    },
+    "title price slug description"
+  )
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((e) => {
+      res.status(400).send({
+        data: e,
+      });
+    });
+};
 
 exports.post = (req, res, next) => {
   const product = new Product(req.body);
   product
     .save()
     .then((x) => {
-      res.status(201).send({ message: "Product was successfully registered!" });
+      res.status(201).send({
+        message: "Product was successfully registered!",
+      });
     })
     .catch((e) => {
-      res
-        .status(400)
-        .send({ message: "Failed to register the product", data: e });
+      res.status(400).send({
+        message: "Failed to register the product",
+        data: e,
+      });
     });
 };
 
