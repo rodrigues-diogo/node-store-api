@@ -19,6 +19,24 @@ exports.get = (req, res, next) => {
     });
 };
 
+exports.getBySlug = (req, res, next) => {
+  Product.findOne(
+    {
+      slug: req.params.slug,
+      active: true,
+    },
+    "title price slug description tags"
+  )
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((e) => {
+      res.status(400).send({
+        data: e,
+      });
+    });
+};
+
 exports.post = (req, res, next) => {
   const product = new Product(req.body);
   product
