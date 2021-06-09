@@ -2,14 +2,11 @@
 
 const Product = require("../models/products");
 const ValidationContract = require("../validators/validator");
+const repository = require("../repositories/product-repository");
 
 exports.get = (req, res, next) => {
-  Product.find(
-    {
-      active: true,
-    },
-    "title price slug description"
-  )
+  repository
+    .get()
     .then((data) => {
       res.status(200).send(data);
     })
@@ -21,7 +18,8 @@ exports.get = (req, res, next) => {
 };
 
 exports.getById = (req, res, next) => {
-  Product.findById(req.params.id)
+  repository
+    .getById(req.params.id)
     .then((data) => {
       res.status(200).send(data);
     })
@@ -33,13 +31,8 @@ exports.getById = (req, res, next) => {
 };
 
 exports.getBySlug = (req, res, next) => {
-  Product.findOne(
-    {
-      slug: req.params.slug,
-      active: true,
-    },
-    "title price slug description tags"
-  )
+  repository
+    .getBySlug(req.params.slug)
     .then((data) => {
       res.status(200).send(data);
     })
@@ -51,13 +44,8 @@ exports.getBySlug = (req, res, next) => {
 };
 
 exports.getByTag = (req, res, next) => {
-  Product.find(
-    {
-      tags: req.params.tag,
-      active: true,
-    },
-    "title price slug description tags"
-  )
+  repository
+    .getByTag(req.params.tag)
     .then((data) => {
       res.status(200).send(data);
     })
@@ -90,9 +78,7 @@ exports.post = (req, res, next) => {
     res.status(400).send(contract.getErrors()).end();
   }
 
-  const product = new Product(req.body);
-  product
-    .save()
+  Product.create(req.body)
     .then((x) => {
       res.status(201).send({
         message: "Product was successfully registered!",
@@ -107,11 +93,8 @@ exports.post = (req, res, next) => {
 };
 
 exports.put = (req, res, next) => {
-  Product.findByIdAndUpdate(req.params.id, {
-    title: req.body.title,
-    description: req.body.description,
-    price: req.body.price,
-  })
+  repository
+    .update(req.params.id, req.body)
     .then(() => {
       res.status(200).send({
         message: "Product was successfully updated!",
@@ -125,8 +108,9 @@ exports.put = (req, res, next) => {
     });
 };
 
-exports.del = (req, res, next) => {
-  Product.findByIdAndDelete(req.body.id)
+exports.delete = (req, res, next) => {
+  repository
+    .delete(req.body.id)
     .then(() => {
       res.status(200).send({
         message: "Product was successfully deleted!",
