@@ -1,6 +1,5 @@
 "use strict";
 
-const Product = require("../models/products");
 const ValidationContract = require("../validators/validator");
 const repository = require("../repositories/product-repository");
 

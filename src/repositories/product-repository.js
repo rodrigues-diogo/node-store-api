@@ -1,6 +1,6 @@
 "use strict";
 
-const Product = require("../models/products");
+const Product = require("../models/product");
 
 exports.get = async () => {
   const res = await Product.find(
