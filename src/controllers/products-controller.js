@@ -4,59 +4,43 @@ const Product = require("../models/products");
 const ValidationContract = require("../validators/validator");
 const repository = require("../repositories/product-repository");
 
-exports.get = (req, res, next) => {
-  repository
-    .get()
-    .then((data) => {
-      res.status(200).send(data);
-    })
-    .catch((e) => {
-      res.status(400).send({
-        data: e,
-      });
-    });
+exports.get = async (req, res, next) => {
+  try {
+    const data = await repository.get();
+    res.status(200).send(data);
+  } catch (error) {
+    res.status(500).send({ message: "Failed while process the request" });
+  }
 };
 
-exports.getById = (req, res, next) => {
-  repository
-    .getById(req.params.id)
-    .then((data) => {
-      res.status(200).send(data);
-    })
-    .catch((e) => {
-      res.status(400).send({
-        data: e,
-      });
-    });
+exports.getById = async (req, res, next) => {
+  try {
+    const data = await repository.getById(req.params.id);
+    res.status(200).send(data);
+  } catch (error) {
+    res.status(500).send({ message: "Failed while process the request" });
+  }
 };
 
-exports.getBySlug = (req, res, next) => {
-  repository
-    .getBySlug(req.params.slug)
-    .then((data) => {
-      res.status(200).send(data);
-    })
-    .catch((e) => {
-      res.status(400).send({
-        data: e,
-      });
-    });
+exports.getBySlug = async (req, res, next) => {
+  try {
+    const data = await repository.getBySlug(req.params.slug);
+    res.status(200).send(data);
+  } catch (error) {
+    res.status(500).send({ message: "Failed while process the request" });
+  }
 };
 
-exports.getByTag = (req, res, next) => {
-  repository
-    .getByTag(req.params.tag)
-    .then((data) => {
-      res.status(200).send(data);
-    })
-    .catch((e) => {
-      res.status(400).send({
-        data: e,
-      });
-    });
+exports.getByTag = async (req, res, next) => {
+  try {
+    const data = await repository.getByTag(req.params.tag);
+    res.status(200).send(data);
+  } catch (error) {
+    res.status(500).send({ message: "Failed while process the request" });
+  }
 };
 
-exports.post = (req, res, next) => {
+exports.post = async (req, res, next) => {
   let contract = new ValidationContract();
   contract.hasMinLen(
     req.body.title,
@@ -78,48 +62,34 @@ exports.post = (req, res, next) => {
     res.status(400).send(contract.getErrors()).end();
   }
 
-  Product.create(req.body)
-    .then((x) => {
-      res.status(201).send({
-        message: "Product was successfully registered!",
-      });
-    })
-    .catch((e) => {
-      res.status(400).send({
-        message: "Failed to register the product",
-        data: e,
-      });
+  try {
+    await repository.create(req.body);
+    res.status(201).send({
+      message: "Product was successfully registered!",
     });
+  } catch (error) {
+    res.status(500).send({ message: "Failed while process the request" });
+  }
 };
 
-exports.put = (req, res, next) => {
-  repository
-    .update(req.params.id, req.body)
-    .then(() => {
-      res.status(200).send({
-        message: "Product was successfully updated!",
-      });
-    })
-    .catch(() => {
-      res.status(400).send({
-        message: "Failed to update the product",
-        data: e,
-      });
+exports.put = async (req, res, next) => {
+  try {
+    await repository.update(req.params.id, req.body);
+    res.status(200).send({
+      message: "Product was successfully updated!",
     });
+  } catch (error) {
+    res.status(500).send({ message: "Failed while process the request" });
+  }
 };
 
-exports.delete = (req, res, next) => {
-  repository
-    .delete(req.body.id)
-    .then(() => {
-      res.status(200).send({
-        message: "Product was successfully deleted!",
-      });
-    })
-    .catch(() => {
-      res.status(400).send({
-        message: "Failed to delte the product",
-        data: e,
-      });
+exports.delete = async (req, res, next) => {
+  try {
+    await repository.delete(req.params.id);
+    res.status(200).send({
+      message: "Product was successfully deleted!",
     });
+  } catch (error) {
+    res.status(500).send({ message: "Failed while process the request" });
+  }
 };
