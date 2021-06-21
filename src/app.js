@@ -4,9 +4,15 @@ require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
+const config = require("./config");
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.zqvrb.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(config.connectionString, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+mongoose.set("useNewUrlParser", true);
+mongoose.set("useFindAndModify", false);
+mongoose.set("useCreateIndex", true);
 
 const indexRoute = require("./routes/index-route");
 const productRoute = require("./routes/products-route");
